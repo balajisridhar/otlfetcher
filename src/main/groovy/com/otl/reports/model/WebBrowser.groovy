@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.WebWindowEvent
 import com.gargoylesoftware.htmlunit.WebWindowListener
 import com.gargoylesoftware.htmlunit.html.DomElement
+import com.gargoylesoftware.htmlunit.html.DomNode
 import com.gargoylesoftware.htmlunit.html.DomNodeList
 import com.gargoylesoftware.htmlunit.html.HtmlElement
 import com.gargoylesoftware.htmlunit.html.HtmlFrame
@@ -82,6 +83,35 @@ class WebBrowser {
 
 	}
 
+	def querySelector(def str){
+		DomElement elem = null
+		
+		try{
+			elem=currentPage.querySelector(str)
+			Log.info("Element found ${elem}")
+		}catch(Exception e)
+		{
+			Log.error("Exception found ${e}")
+		}
+		
+		return elem
+	}
+	
+	def querySelectorAll(def str){
+		DomNodeList<HtmlElement> domNodeList = null
+		
+		try{
+			domNodeList = currentPage.querySelectorAll(str)
+			Log.info("Element found ${domNodeList}")
+		}catch(Exception e)
+		{
+			Log.error("Exception found ${e}")
+		}
+		
+		return domNodeList
+	}
+	
+	
 	def close(){
 
 		webClient.closeAllWindows();
@@ -106,7 +136,7 @@ class WebBrowser {
 
 	ArrayList<HtmlElement> getElemsByTagClass(String tag ,String name){
 
-		DomNodeList<HtmlElement> domNodeList= currentPage.getElementsByTagName(tag); //get a list of all table rows
+		DomNodeList<HtmlElement> domNodeList= currentPage.getElementsByTagName(tag); //get a list of all table rows		
 		ArrayList<HtmlElement> elems= new ArrayList<HtmlElement>();
 
 		for (HtmlElement row : domNodeList)
@@ -282,11 +312,13 @@ class WebBrowser {
 
 
 	}
-
+	
+	//TODO: Add a function that takes configurable wait period as an argument
 	def waitForPageLoad(){
 
 		while(!curWebWindowListener.pageChanged){
-			Thread.currentThread().wait(5000)
+			//Have increased the thread wait period by *10 to address delay in network
+			Thread.currentThread().wait(50000)
 		}
 
 		//currentPage=webClient.
