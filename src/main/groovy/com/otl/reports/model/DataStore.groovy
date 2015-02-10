@@ -36,6 +36,7 @@ class DataStore {
 	Sql fetcherDB =null;
 	Sql userDB =null;
 	Sql tmpImpDB = null;
+	Sql jobDB = null;
 
 	def users=[:]
 	def projects=[:]
@@ -48,20 +49,56 @@ class DataStore {
 
 
 
-	void init(def userfileName,def fetchfileName){
+	void init(def userfileName,def fetchfileName, def jobFileName){
 
 		Class.forName("org.sqlite.JDBC")
 
 		fetcherDB = Sql.newInstance("jdbc:sqlite:"+fetchfileName, "org.sqlite.JDBC")
 		userDB = Sql.newInstance("jdbc:sqlite:"+userfileName, "org.sqlite.JDBC")
+		jobDB = Sql.newInstance("jdbc:sqlite:"+jobFileName, "org.sqlite.JDBC")
+		
 		//create table if not exists TableName (col1 typ1, ..., colN typN)
 		/*
 		 public String user
 		 def password
 		 def ip
 		 */
-
-
+		
+		/*
+		 * 	def jobName
+			def jobID
+			def jobDesc
+			def jobValidity
+			def jobStartDate
+			def jobEndDate
+			def jobFrequency
+			def jobRetry
+			def jobReportFolder
+			def jobToAddress
+			def jobCCAddress
+			def jobBCCAddress
+			def jobSubject
+			def jobMailContent
+			def jobOwner
+		 */
+		//jobDB.execute("create table if not exists jobDescription (jobName string, jobID string,jobDesc string,jobValidity string,jobStartDate date, jobEndDate date,jobFrequency string, jobRetry integer, jobReportFolder string, jobToAddress string, jobCCAddress string, jobBCCAddress string, jobSubjectstring, jobMailContent string, jobOwner string)")
+		jobDB.execute("create table if not exists jobdescription (jobname string, jobid string,jobdesc string,jobvalidity string,jobstartdate date, jobenddate date,jobfrequency string, jobretry integer, jobreportfolder string, jobtoaddress string, jobccaddress string, jobbccaddress string, jobsubjectstring, jobmailcontent string, jobowner string)")
+		
+		/*
+		 *
+		 *	def jobInstID
+			def jobInstDesc
+			def jobParentID
+			def jobInstActualStartTime
+			def jobInstRevisedStartTime
+			def jobInstResult
+			def jobInstRetry
+			def jobInstReportLocation
+			def jobInstReportName
+		 */
+		//jobDB.execute("create table if not exists jobInstance (jobInstID string ,jobInstDesc string , jobParentID string , jobInstActualStartTime Date,jobInstRevisedStartTime Date, jobInstResult string, jobInstRetry integer, jobInstReportLocation string, jobInstReportName string  )")
+		jobDB.execute("create table if not exists jobinstance (jobinstid string ,jobinstdesc string , jobparentid string , jobinstactualstarttime date,jobinstrevisedstarttime date, jobinstresult string, jobinstretry integer, jobinstreportlocation string, jobinstreportname string  )")
+		
 		userDB.execute("create table if not exists userInfo (user string, password string,ip string,locked string,lastupdated date,team string,comment string)")
 
 		/*

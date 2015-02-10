@@ -27,7 +27,7 @@ class DataManager {
 
 
 		dataStore=new DataStore()
-		dataStore.init(Configurator.globalconfig.userdb, Configurator.globalconfig.fetcherdb)
+		dataStore.init(Configurator.globalconfig.userdb, Configurator.globalconfig.fetcherdb, Configurator.globalconfig.jobdb)
 	}
 
 	def print(){
